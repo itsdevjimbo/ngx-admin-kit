@@ -1,59 +1,99 @@
-# NgxAdminPanel
+# Ngx Admin Kit
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.2.
+This Angular workspace contains the `ngx-admin-kit` library and an example application that consumes
+its built package.
 
-## Development server
+The library is an early release: resource registration and list/create/edit routing work; backend
+CRUD and form rendering are future work. It currently targets Angular `^22.2.0`.
 
-To start a local development server, run:
-
-```bash
-ng serve
+```text
+projects/ngx-admin-kit/
+  package.json               Published package metadata and peer dependencies
+  ng-package.json            Package build configuration
+  README.md                  Consumer documentation
+  LICENSE                    MIT license included in the package
+  src/public-api.ts          Public exports
+  src/lib/
+    provider.ts              Resource registry and route factory
+    provider.spec.ts         Routing and registration tests
+    interfaces/              Resource and field contracts
+    pages/                   Generated resource pages
+projects/demo/
+  src/app/                   Example application importing ngx-admin-kit
+    resources/               Consumer resource definitions
+  src/material-theme.scss    Example application's Material theme
+  public/                    Example application's static assets
+dist/ngx-admin-kit/          Generated package output
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+See [the library README](projects/ngx-admin-kit/README.md) for root and nested-layout examples.
 
-## Code scaffolding
+## Build the library
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Install workspace dependencies after cloning:
 
 ```bash
-ng generate --help
+npm ci
 ```
-
-## Building
-
-To build the project run:
 
 ```bash
-ng build
+npm run build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+This produces the distributable package in `dist/ngx-admin-kit` using Angular partial compilation.
+The example imports `ngx-admin-kit` through the workspace path mapping to this built output.
 
-## Running unit tests
+## Run the example
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+Start the example:
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+The `prestart` script builds the library before starting the demo. Open `http://localhost:4200/`.
+The example explicitly redirects `/` to `/users`.
 
-For end-to-end (e2e) testing, run:
+For library changes, run `npm run watch` in a separate terminal to rebuild the package as you edit.
+
+## Verify
 
 ```bash
-ng e2e
+npm test -- --watch=false
+npm run test:demo -- --watch=false
+npm run build:demo
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+`npm test` runs the library's tests. The demo test and build scripts first rebuild the library so the
+example uses the latest packaged code. Package metadata belongs in
+`projects/ngx-admin-kit/package.json`; the root package is a private development workspace.
 
-## Additional Resources
+## Inspect the release package
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Build and preview the files npm would include:
+
+```bash
+npm run build
+npm pack ./dist/ngx-admin-kit --dry-run
+```
+
+The package should contain its manifest, consumer README, MIT license, type declarations, and all
+generated JavaScript bundles, including the lazy resource pages. To create a local tarball for
+testing in another application:
+
+```bash
+npm pack ./dist/ngx-admin-kit
+```
+
+Install that tarball from another Angular application using its full path:
+
+```bash
+npm install /absolute/path/to/ngx-admin-kit-0.0.1.tgz
+```
+
+Release metadata is maintained in `projects/ngx-admin-kit/package.json`. The library's `LICENSE`
+is copied into the build automatically; keep it identical to the repository's root `LICENSE`.
+
+## License
+
+[MIT](LICENSE).

@@ -1,0 +1,39 @@
+{
+  "name": "ngx-admin-kit",
+  "version": "0.0.1",
+  "description": "Configurable resource pages for Angular applications.",
+  "license": "MIT",
+  "author": "itsdevjimbo",
+  "keywords": [
+    "angular",
+    "admin",
+    "resource",
+    "routing"
+  ],
+  "homepage": "https://github.com/itsdevjimbo/ngx-admin-kit#readme",
+  "bugs": {
+    "url": "https://github.com/itsdevjimbo/ngx-admin-kit/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itsdevjimbo/ngx-admin-kit.git",
+    "directory": "projects/ngx-admin-kit"
+  },
+  "files": [
+    "fesm2022/",
+    "types/"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "peerDependencies": {
+    "@angular/common": "^22.2.0",
+    "@angular/core": "^22.2.0",
+    "@angular/router": "^22.2.0"
+  },
+  "dependencies": {
+    "tslib": "^2.3.0"
+  },
+  "sideEffects": false
+}

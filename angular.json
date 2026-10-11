@@ -6,27 +6,51 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "ngx-admin-panel": {
+    "ngx-admin-kit": {
+      "projectType": "library",
+      "root": "projects/ngx-admin-kit",
+      "sourceRoot": "projects/ngx-admin-kit/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-admin-kit/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/ngx-admin-kit/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/ngx-admin-kit/tsconfig.spec.json"
+          }
+        }
+      }
+    },
+    "demo": {
       "projectType": "application",
       "schematics": {},
-      "root": "",
-      "sourceRoot": "src",
+      "root": "projects/demo",
+      "sourceRoot": "projects/demo/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
           "options": {
-            "browser": "src/main.ts",
-            "tsConfig": "tsconfig.app.json",
+            "browser": "projects/demo/src/main.ts",
+            "tsConfig": "projects/demo/tsconfig.app.json",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "projects/demo/public"
               }
             ],
-            "styles": [
-              "src/styles.css"
-            ]
+            "styles": ["projects/demo/src/material-theme.scss", "projects/demo/src/styles.css"]
           },
           "configurations": {
             "production": {
@@ -56,10 +80,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ngx-admin-panel:build:production"
+              "buildTarget": "demo:build:production"
             },
             "development": {
-              "buildTarget": "ngx-admin-panel:build:development"
+              "buildTarget": "demo:build:development"
             }
           },
           "defaultConfiguration": "development"
