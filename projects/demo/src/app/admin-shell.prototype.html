@@ -19,7 +19,11 @@
     (openedChange)="onDrawerChanged($event)"
     (closed)="afterDrawerClosed()"
     [style.width]="
-      navigationCollapsed() ? 'var(--prototype-collapsed-width)' : 'var(--prototype-sidebar-width)'
+      isMobile()
+        ? '100%'
+        : navigationCollapsed()
+          ? 'var(--prototype-collapsed-width)'
+          : 'var(--prototype-sidebar-width)'
     "
     [attr.role]="isMobile() ? 'dialog' : 'navigation'"
     [attr.aria-modal]="isMobile() && mobileOpen() ? true : null"
@@ -32,12 +36,17 @@
         @if (!navigationCollapsed()) {
           <span>Acme Admin</span>
         }
+        @if (isMobile()) {
+          <button
+            mat-icon-button
+            class="drawer-close"
+            aria-label="Close navigation"
+            (click)="closeMobile()"
+          >
+            <mat-icon fontSet="material-symbols-outlined">close</mat-icon>
+          </button>
+        }
       </div>
-    }
-    @if (isMobile()) {
-      <button mat-button class="drawer-close" (click)="closeMobile()">
-        <mat-icon fontSet="material-symbols-outlined">close</mat-icon> Close navigation
-      </button>
     }
     @if (customSlot()) {
       <ng-content select="[ngxAdminShellNavigation]" />
@@ -70,6 +79,7 @@
   <div
     class="prototype-switcher"
     aria-label="Throwaway prototype variants"
+    [hidden]="isMobile() && mobileOpen()"
     [attr.inert]="isMobile() && mobileOpen() ? '' : null"
   >
     <button mat-icon-button aria-label="Previous layout" (click)="cycleVariant(-1)">
@@ -81,7 +91,7 @@
       <mat-icon fontSet="material-symbols-outlined">chevron_right</mat-icon>
     </button>
   </div>
-  <div [attr.inert]="isMobile() && mobileOpen() ? '' : null">
+  <div [hidden]="isMobile() && mobileOpen()" [attr.inert]="isMobile() && mobileOpen() ? '' : null">
     <ng-content select="[prototypeControls]" />
   </div>
 }

@@ -162,7 +162,8 @@ h1 {
   margin-left: 18px;
 }
 .drawer-close {
-  margin: 0 8px 8px;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 .prototype-switcher {
   position: fixed;
@@ -197,6 +198,9 @@ h1 {
 }
 .prototype-switcher button {
   color: inherit;
+}
+.prototype-switcher[hidden] {
+  display: none;
 }
 .skip-link {
   position: fixed;
@@ -247,7 +251,17 @@ h1 {
   --prototype-content-padding: 16px;
 }
 :host.mobile mat-sidenav {
-  max-width: calc(100vw - 48px);
+  max-width: none;
+  margin: 0;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+}
+:host.mobile .sidebar-brand {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--mat-sys-surface);
 }
 :host.mobile .topbar {
   padding: 0 8px;
@@ -255,11 +269,6 @@ h1 {
 }
 :host.mobile.variant-c .shell-container {
   padding: 0;
-}
-:host.mobile.variant-c mat-sidenav {
-  margin: 0;
-  height: 100%;
-  border-radius: 0 8px 8px 0;
 }
 :host.mobile .prototype-switcher span {
   min-width: 210px;

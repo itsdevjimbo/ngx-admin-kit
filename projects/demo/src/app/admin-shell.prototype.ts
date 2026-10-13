@@ -1,5 +1,5 @@
 // THROWAWAY: three responsive shell layouts on /users?variant=A|B|C.
-// These proposed interactions need maintainer feedback; this is not the public library API.
+// Variant A and its interactions are confirmed; this is not the public library API.
 import { NgTemplateOutlet } from '@angular/common';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import {
@@ -66,7 +66,7 @@ export class AdminShellPrototype {
   readonly desktopCollapsed = signal(false);
   readonly mobileOpen = signal(false);
   readonly isMobile = signal(false);
-  // Proposed context for consumer-owned navigation: desktop state never hides mobile labels.
+  // Effective context for consumer-owned navigation: desktop state never hides mobile labels.
   readonly navigationCollapsed = computed(() => !this.isMobile() && this.desktopCollapsed());
   readonly navigationPresentation = computed(() =>
     this.isMobile() ? 'mobile' : this.desktopCollapsed() ? 'desktop-collapsed' : 'desktop-expanded',
@@ -162,7 +162,7 @@ export class AdminShellPrototype {
   toggleGroup(item: PrototypeItem): void {
     if (this.navigationCollapsed()) {
       this.desktopCollapsed.set(false);
-      this.event.set('Proposed: selecting a collapsed group expands the sidebar and its group.');
+      this.event.set('Selecting a collapsed group expands the sidebar and its group.');
       this.expandedGroups.update((groups) => new Set([...groups, item.id]));
       return;
     }
