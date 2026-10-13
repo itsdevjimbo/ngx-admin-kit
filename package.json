@@ -6,6 +6,8 @@
     "ng": "ng",
     "prestart": "npm run build",
     "start": "ng serve demo",
+    "preprototype:shell": "npm run build",
+    "prototype:shell": "ng serve demo --port 4207",
     "mock-api": "node projects/demo/mock-api/start.mjs",
     "test:mock-api": "node --test projects/demo/mock-api/server.test.mjs",
     "build": "ng build ngx-admin-kit",

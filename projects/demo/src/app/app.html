@@ -1,1 +1,96 @@
-<router-outlet />
+@if (prototypeEnabled) {
+  <app-admin-shell-prototype
+    #shell
+    [items]="navigationMode() === 'empty' ? [] : navigation"
+    [contentMode]="contentMode()"
+  >
+    @if (navigationMode() === 'custom') {
+      <nav ngxAdminShellNavigation class="custom-nav" aria-label="Consumer navigation">
+        @if (!shell.navigationCollapsed()) {
+          <span class="custom-heading">Custom navigation slot</span>
+        }
+        <a
+          [href]="'/users?variant=' + shell.variant()"
+          aria-label="Users"
+          (click)="onCustomNavigation(shell, $event, '/users')"
+          ><mat-icon fontSet="material-symbols-outlined">group</mat-icon>
+          @if (!shell.navigationCollapsed()) {
+            <span>Users</span>
+          }
+        </a>
+        <a
+          [href]="'/users/create?variant=' + shell.variant()"
+          aria-label="Invite user"
+          (click)="onCustomNavigation(shell, $event, '/users/create')"
+          ><mat-icon fontSet="material-symbols-outlined">person_add</mat-icon>
+          @if (!shell.navigationCollapsed()) {
+            <span>Invite user</span>
+          }
+        </a>
+      </nav>
+    }
+    <router-outlet />
+    <details prototypeControls class="review-panel">
+      <summary>Review scenarios &amp; state</summary>
+      <div class="panel-body">
+        <p>Proposed behavior for live review. Nothing is saved.</p>
+        <label
+          >Navigation source<select
+            #navSource
+            [value]="navigationMode()"
+            (change)="navigationMode.set(navSource.value)"
+          >
+            <option value="schema">Application-supplied array</option>
+            <option value="custom">Custom navigation slot</option>
+            <option value="empty">Empty array</option>
+          </select></label
+        >
+        <label
+          >Page body<select #pageBody [value]="contentMode()" (change)="setContent(pageBody.value)">
+            <option value="route">Routed content &amp; sample users</option>
+            <option value="long">Long content (35 rows)</option>
+            <option value="empty">Empty content</option>
+          </select></label
+        >
+        <dl>
+          <dt>Presentation</dt>
+          <dd>{{ shell.navigationPresentation() }}</dd>
+          <dt>Desktop collapsed</dt>
+          <dd>{{ shell.desktopCollapsed() }}</dd>
+          <dt>Mobile open</dt>
+          <dd>{{ shell.mobileOpen() }}</dd>
+          <dt>Navigation visible</dt>
+          <dd>{{ shell.hasNavigation() }}</dd>
+          <dt>Source</dt>
+          <dd>{{ navigationMode() }}</dd>
+          <dt>Route</dt>
+          <dd>{{ shell.pageRoute() }}</dd>
+          <dt>Dimensions</dt>
+          <dd>280 / 72 / 64 / 24px</dd>
+          <dt>Mobile breakpoint</dt>
+          <dd>Below 960px</dd>
+        </dl>
+        <p aria-live="polite">{{ shell.event() }}</p>
+        <ol>
+          <li>
+            Collapse on desktop. Resize below 960px, then open navigation: all labels stay visible.
+          </li>
+          <li>
+            On mobile, open a group: keep the drawer open. Select an internal link: close it after
+            navigation succeeds.
+          </li>
+          <li>
+            Try Tab, Shift+Tab, Escape, the close control, and the backdrop. Dismissal returns focus
+            to Menu.
+          </li>
+          <li>
+            Return to desktop: preserve the collapsed preference and discard the mobile-open state.
+          </li>
+          <li>Compare long content, empty content, a custom slot, and an empty array.</li>
+        </ol>
+      </div>
+    </details>
+  </app-admin-shell-prototype>
+} @else {
+  <router-outlet />
+}

@@ -1,0 +1,270 @@
+<a class="skip-link" href="#prototype-page">Skip to page content</a>
+@if (variant() === 'B') {
+  <ng-container [ngTemplateOutlet]="toolbar" />
+}
+<mat-sidenav-container
+  class="shell-container"
+  [autosize]="true"
+  [hasBackdrop]="isMobile()"
+  (backdropClick)="closeMobile()"
+>
+  <mat-sidenav
+    id="prototype-navigation"
+    [mode]="isMobile() ? 'over' : 'side'"
+    [disableClose]="!isMobile()"
+    [opened]="hasNavigation() && (!isMobile() || mobileOpen())"
+    [autoFocus]="isMobile() ? '.drawer-close' : false"
+    (openedChange)="onDrawerChanged($event)"
+    (closed)="afterDrawerClosed()"
+    [style.width]="
+      navigationCollapsed() ? 'var(--prototype-collapsed-width)' : 'var(--prototype-sidebar-width)'
+    "
+    [attr.role]="isMobile() ? 'dialog' : 'navigation'"
+    [attr.aria-modal]="isMobile() && mobileOpen() ? true : null"
+    aria-label="Main navigation"
+    data-prototype-nav
+  >
+    @if (variant() !== 'B' || isMobile()) {
+      <div class="sidebar-brand">
+        <span class="brand-mark">a</span>
+        @if (!navigationCollapsed()) {
+          <span>Acme Admin</span>
+        }
+      </div>
+    }
+    @if (isMobile()) {
+      <button mat-button class="drawer-close" (click)="closeMobile()">
+        <mat-icon fontSet="material-symbols-outlined">close</mat-icon> Close navigation
+      </button>
+    }
+    @if (customSlot()) {
+      <ng-content select="[ngxAdminShellNavigation]" />
+    } @else {
+      <ng-container
+        [ngTemplateOutlet]="navigation"
+        [ngTemplateOutletContext]="{ $implicit: prunedItems(), depth: 0 }"
+      />
+    }
+    <div class="sidebar-foot">
+      @if (!navigationCollapsed()) {
+        <span>Acme workspace</span><small>Application-owned navigation</small>
+      } @else {
+        <span aria-label="Acme workspace">AC</span>
+      }
+    </div>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    @if (variant() === 'A') {
+      <ng-container [ngTemplateOutlet]="toolbar" />
+    }
+    <div class="page-scroll">
+      @if (variant() === 'C') {
+        <ng-container [ngTemplateOutlet]="toolbar" />
+      }
+      <main id="prototype-page" class="page" tabindex="-1" data-prototype-page>
+        <div class="page-heading">
+          <div>
+            <span class="eyebrow">ACME / WORKSPACE</span>
+            <h1>{{ contentMode() === 'empty' ? 'Empty page' : 'Users' }}</h1>
+            <p>
+              {{
+                contentMode() === 'empty'
+                  ? 'The application has supplied no page body.'
+                  : 'Application content inside the proposed admin shell.'
+              }}
+            </p>
+          </div>
+          <button mat-stroked-button disabled>Invite user</button>
+        </div>
+        @if (contentMode() !== 'empty') {
+          <section class="route-content" aria-label="Application-supplied routed page">
+            <ng-content />
+          </section>
+          <div class="summary">
+            <article>
+              <small>Total users</small><strong>248</strong><span>Across your workspace</span>
+            </article>
+            <article>
+              <small>Active this month</small><strong>192</strong><span>77% of all users</span>
+            </article>
+            <article>
+              <small>Pending invitations</small><strong>12</strong><span>Awaiting acceptance</span>
+            </article>
+          </div>
+          <section class="user-list" aria-label="Fictional users for layout review">
+            <div class="list-heading">
+              <h2>Workspace members</h2>
+              <span>Preview data</span>
+            </div>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (row of contentMode() === 'long' ? rows : rows.slice(0, 7); track row.id) {
+                    <tr>
+                      <td>
+                        <span class="avatar">{{ row.id }}</span
+                        >{{ row.name }}
+                      </td>
+                      <td>{{ row.email }}</td>
+                      <td><span class="status">Active</span></td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+          </section>
+        }
+      </main>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+@if (devMode) {
+  <div
+    class="prototype-switcher"
+    aria-label="Throwaway prototype variants"
+    [attr.inert]="isMobile() && mobileOpen() ? '' : null"
+  >
+    <button mat-icon-button aria-label="Previous layout" (click)="cycleVariant(-1)">
+      <mat-icon fontSet="material-symbols-outlined">chevron_left</mat-icon></button
+    ><span
+      ><b>{{ variant() }} · {{ variantNames[variant()] }}</b
+      ><small>Throwaway prototype · arrow keys switch layouts</small></span
+    ><button mat-icon-button aria-label="Next layout" (click)="cycleVariant(1)">
+      <mat-icon fontSet="material-symbols-outlined">chevron_right</mat-icon>
+    </button>
+  </div>
+  <div [attr.inert]="isMobile() && mobileOpen() ? '' : null">
+    <ng-content select="[prototypeControls]" />
+  </div>
+}
+<ng-template #toolbar>
+  <header class="topbar" [attr.inert]="isMobile() && mobileOpen() ? '' : null">
+    @if (hasNavigation()) {
+      <button
+        #menuButton
+        mat-icon-button
+        [attr.aria-label]="
+          isMobile()
+            ? 'Open navigation'
+            : desktopCollapsed()
+              ? 'Expand sidebar'
+              : 'Collapse sidebar'
+        "
+        aria-controls="prototype-navigation"
+        [attr.aria-expanded]="isMobile() ? mobileOpen() : !desktopCollapsed()"
+        (click)="isMobile() ? toggleMobile() : toggleDesktop()"
+      >
+        <mat-icon fontSet="material-symbols-outlined">{{
+          isMobile() ? 'menu' : desktopCollapsed() ? 'left_panel_open' : 'left_panel_close'
+        }}</mat-icon>
+      </button>
+    }
+    @if (variant() === 'B') {
+      <span class="brand-mark">a</span><strong>Acme Admin</strong>
+    } @else {
+      <strong>Workspace</strong>
+    }
+    <div class="topbar-spacer"></div>
+    <span class="topbar-note">Consumer top-bar content</span
+    ><button mat-icon-button aria-label="Notifications" disabled>
+      <mat-icon fontSet="material-symbols-outlined">notifications</mat-icon></button
+    ><button mat-button aria-label="Account for Alex Morgan">
+      <span class="account-avatar">AM</span><span class="account-name">Alex Morgan</span>
+    </button>
+  </header>
+</ng-template>
+<ng-template #navigation let-items let-depth="depth">
+  <ul class="navigation" [class.child-navigation]="depth > 0">
+    @for (item of items; track item.id) {
+      <li>
+        @if (item.children) {
+          <button
+            class="nav-item"
+            [class.active-group]="groupActive(item)"
+            [attr.aria-label]="item.name"
+            [attr.aria-expanded]="!navigationCollapsed() && expandedGroups().has(item.id)"
+            [attr.aria-controls]="'group-' + item.id"
+            [matTooltip]="item.name"
+            [matTooltipDisabled]="!navigationCollapsed()"
+            matTooltipPosition="right"
+            (click)="toggleGroup(item)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="icon"
+              [ngTemplateOutletContext]="{ $implicit: item }"
+            />
+            @if (!navigationCollapsed()) {
+              <span class="nav-label">{{ item.name }}</span
+              ><mat-icon class="chevron" fontSet="material-symbols-outlined">{{
+                expandedGroups().has(item.id) ? 'expand_less' : 'expand_more'
+              }}</mat-icon>
+            }
+          </button>
+          <div
+            [id]="'group-' + item.id"
+            [hidden]="navigationCollapsed() || !expandedGroups().has(item.id)"
+          >
+            <ng-container
+              [ngTemplateOutlet]="navigation"
+              [ngTemplateOutletContext]="{ $implicit: item.children, depth: depth + 1 }"
+            />
+          </div>
+        } @else if (item.route) {
+          <a
+            class="nav-item"
+            [class.active]="active(item)"
+            [attr.aria-current]="active(item) ? 'page' : null"
+            [routerLink]="item.route"
+            queryParamsHandling="preserve"
+            [attr.aria-label]="item.name"
+            [matTooltip]="item.name"
+            [matTooltipDisabled]="!navigationCollapsed()"
+            matTooltipPosition="right"
+            ><ng-container
+              [ngTemplateOutlet]="icon"
+              [ngTemplateOutletContext]="{ $implicit: item }"
+            />
+            @if (!navigationCollapsed()) {
+              <span class="nav-label">{{ item.name }}</span>
+            }
+          </a>
+        } @else {
+          <a
+            class="nav-item"
+            [href]="item.external"
+            target="_blank"
+            rel="noopener"
+            [attr.aria-label]="item.name + ' (opens in a new tab)'"
+            [matTooltip]="item.name"
+            [matTooltipDisabled]="!navigationCollapsed()"
+            matTooltipPosition="right"
+            ><ng-container
+              [ngTemplateOutlet]="icon"
+              [ngTemplateOutletContext]="{ $implicit: item }"
+            />
+            @if (!navigationCollapsed()) {
+              <span class="nav-label">{{ item.name }}</span
+              ><mat-icon class="chevron" fontSet="material-symbols-outlined">open_in_new</mat-icon>
+            }
+          </a>
+        }
+      </li>
+    }
+  </ul>
+</ng-template>
+<ng-template #icon let-item>
+  @if (item.svgIcon) {
+    <mat-icon [svgIcon]="item.svgIcon" />
+  } @else if (item.icon) {
+    <mat-icon fontSet="material-symbols-outlined">{{ item.icon }}</mat-icon>
+  } @else {
+    <span class="fallback-icon" aria-hidden="true">{{ item.name.slice(0, 2).toUpperCase() }}</span>
+  }
+</ng-template>
