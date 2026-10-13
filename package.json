@@ -6,6 +6,8 @@
     "ng": "ng",
     "prestart": "npm run build",
     "start": "ng serve demo",
+    "mock-api": "node projects/demo/mock-api/start.mjs",
+    "test:mock-api": "node --test projects/demo/mock-api/server.test.mjs",
     "build": "ng build ngx-admin-kit",
     "build:demo": "npm run build && ng build demo",
     "watch": "ng build ngx-admin-kit --watch --configuration development",
