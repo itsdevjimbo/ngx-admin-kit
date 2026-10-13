@@ -77,11 +77,6 @@ export class AdminShellPrototype {
   readonly pageRoute = signal('');
   readonly event = signal('Ready. Try collapse, resize, groups, and navigation.');
   readonly devMode = isDevMode();
-  readonly rows = Array.from({ length: 35 }, (_, index) => ({
-    id: index + 1,
-    name: `Example user ${index + 1}`,
-    email: `person${index + 1}@example.com`,
-  }));
   private readonly router = inject(Router);
   private readonly menuButton = viewChild('menuButton', {
     read: ElementRef<HTMLButtonElement>,

@@ -1,4 +1,6 @@
-<a class="skip-link" href="#prototype-page">Skip to page content</a>
+<a class="skip-link" [href]="pageRoute() + '?variant=' + variant() + '#prototype-page'"
+  >Skip to page content</a
+>
 @if (variant() === 'B') {
   <ng-container [ngTemplateOutlet]="toolbar" />
 }
@@ -26,7 +28,7 @@
   >
     @if (variant() !== 'B' || isMobile()) {
       <div class="sidebar-brand">
-        <span class="brand-mark">a</span>
+        <span class="brand-mark" aria-hidden="true">a</span>
         @if (!navigationCollapsed()) {
           <span>Acme Admin</span>
         }
@@ -45,13 +47,6 @@
         [ngTemplateOutletContext]="{ $implicit: prunedItems(), depth: 0 }"
       />
     }
-    <div class="sidebar-foot">
-      @if (!navigationCollapsed()) {
-        <span>Acme workspace</span><small>Application-owned navigation</small>
-      } @else {
-        <span aria-label="Acme workspace">AC</span>
-      }
-    </div>
   </mat-sidenav>
   <mat-sidenav-content>
     @if (variant() === 'A') {
@@ -62,64 +57,10 @@
         <ng-container [ngTemplateOutlet]="toolbar" />
       }
       <main id="prototype-page" class="page" tabindex="-1" data-prototype-page>
-        <div class="page-heading">
-          <div>
-            <span class="eyebrow">ACME / WORKSPACE</span>
-            <h1>{{ contentMode() === 'empty' ? 'Empty page' : 'Users' }}</h1>
-            <p>
-              {{
-                contentMode() === 'empty'
-                  ? 'The application has supplied no page body.'
-                  : 'Application content inside the proposed admin shell.'
-              }}
-            </p>
-          </div>
-          <button mat-stroked-button disabled>Invite user</button>
-        </div>
-        @if (contentMode() !== 'empty') {
-          <section class="route-content" aria-label="Application-supplied routed page">
-            <ng-content />
-          </section>
-          <div class="summary">
-            <article>
-              <small>Total users</small><strong>248</strong><span>Across your workspace</span>
-            </article>
-            <article>
-              <small>Active this month</small><strong>192</strong><span>77% of all users</span>
-            </article>
-            <article>
-              <small>Pending invitations</small><strong>12</strong><span>Awaiting acceptance</span>
-            </article>
-          </div>
-          <section class="user-list" aria-label="Fictional users for layout review">
-            <div class="list-heading">
-              <h2>Workspace members</h2>
-              <span>Preview data</span>
-            </div>
-            <div class="table-scroll">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (row of contentMode() === 'long' ? rows : rows.slice(0, 7); track row.id) {
-                    <tr>
-                      <td>
-                        <span class="avatar">{{ row.id }}</span
-                        >{{ row.name }}
-                      </td>
-                      <td>{{ row.email }}</td>
-                      <td><span class="status">Active</span></td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
-          </section>
+        @if (contentMode() === 'empty') {
+          <h1>Empty page</h1>
+        } @else {
+          <ng-content />
         }
       </main>
     </div>
@@ -167,16 +108,13 @@
       </button>
     }
     @if (variant() === 'B') {
-      <span class="brand-mark">a</span><strong>Acme Admin</strong>
+      <span class="brand-mark" aria-hidden="true">a</span><strong>Acme Admin</strong>
     } @else {
       <strong>Workspace</strong>
     }
     <div class="topbar-spacer"></div>
-    <span class="topbar-note">Consumer top-bar content</span
-    ><button mat-icon-button aria-label="Notifications" disabled>
-      <mat-icon fontSet="material-symbols-outlined">notifications</mat-icon></button
-    ><button mat-button aria-label="Account for Alex Morgan">
-      <span class="account-avatar">AM</span><span class="account-name">Alex Morgan</span>
+    <button mat-icon-button aria-label="Account for Alex Morgan" matTooltip="Alex Morgan">
+      <span class="account-avatar" aria-hidden="true">AM</span>
     </button>
   </header>
 </ng-template>
@@ -222,7 +160,8 @@
             [class.active]="active(item)"
             [attr.aria-current]="active(item) ? 'page' : null"
             [routerLink]="item.route"
-            queryParamsHandling="preserve"
+            [queryParams]="{ variant: variant() }"
+            queryParamsHandling="merge"
             [attr.aria-label]="item.name"
             [matTooltip]="item.name"
             [matTooltipDisabled]="!navigationCollapsed()"

@@ -22,8 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
       color: var(--mat-sys-on-surface);
       background: var(--mat-sys-surface);
       border: 1px solid var(--mat-sys-outline-variant);
-      border-radius: 12px;
-      box-shadow: 0 4px 16px #0002;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px #0001;
     }
     .review-panel summary {
       cursor: pointer;
@@ -63,25 +63,45 @@ import { MatIconModule } from '@angular/material/icon';
     .custom-nav {
       display: flex;
       flex-direction: column;
-      gap: 8px;
-      padding: 12px;
+      gap: 2px;
+      padding: 8px;
     }
     .custom-nav a {
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 12px;
+      gap: 10px;
+      min-height: 40px;
+      padding: 10px;
+      font-size: 14px;
+      line-height: 20px;
       border-radius: 8px;
-      color: var(--mat-sys-primary);
+      color: var(--mat-sys-on-surface-variant);
       text-decoration: none;
     }
     .custom-nav a:hover {
       background: var(--mat-sys-surface-container-highest);
     }
-    .custom-nav .custom-heading {
-      color: var(--mat-sys-on-surface-variant);
-      padding: 12px;
-      font-size: 12px;
+    .custom-nav a.active {
+      background: color-mix(in srgb, var(--mat-sys-primary) 8%, var(--mat-sys-surface));
+      color: var(--mat-sys-primary);
+      font-weight: 500;
+    }
+    .custom-nav.collapsed a {
+      justify-content: center;
+    }
+    .custom-nav mat-icon {
+      width: 20px;
+      height: 20px;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .custom-nav a span {
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    .custom-nav a:focus-visible {
+      outline: 2px solid var(--mat-sys-primary);
+      outline-offset: 2px;
     }
   `,
 })

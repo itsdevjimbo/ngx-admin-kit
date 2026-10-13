@@ -5,13 +5,17 @@
     [contentMode]="contentMode()"
   >
     @if (navigationMode() === 'custom') {
-      <nav ngxAdminShellNavigation class="custom-nav" aria-label="Consumer navigation">
-        @if (!shell.navigationCollapsed()) {
-          <span class="custom-heading">Custom navigation slot</span>
-        }
+      <nav
+        ngxAdminShellNavigation
+        class="custom-nav"
+        [class.collapsed]="shell.navigationCollapsed()"
+        aria-label="Consumer navigation"
+      >
         <a
           [href]="'/users?variant=' + shell.variant()"
           aria-label="Users"
+          [class.active]="shell.pageRoute() === '/users' || shell.pageRoute().startsWith('/users/')"
+          [attr.aria-current]="shell.pageRoute() === '/users' ? 'page' : null"
           (click)="onCustomNavigation(shell, $event, '/users')"
           ><mat-icon fontSet="material-symbols-outlined">group</mat-icon>
           @if (!shell.navigationCollapsed()) {
@@ -21,6 +25,8 @@
         <a
           [href]="'/users/create?variant=' + shell.variant()"
           aria-label="Invite user"
+          [class.active]="shell.pageRoute() === '/users/create'"
+          [attr.aria-current]="shell.pageRoute() === '/users/create' ? 'page' : null"
           (click)="onCustomNavigation(shell, $event, '/users/create')"
           ><mat-icon fontSet="material-symbols-outlined">person_add</mat-icon>
           @if (!shell.navigationCollapsed()) {
@@ -29,11 +35,18 @@
         </a>
       </nav>
     }
-    <router-outlet />
+    <router-outlet [routerOutletData]="contentMode()" />
     <details prototypeControls class="review-panel">
       <summary>Review scenarios &amp; state</summary>
       <div class="panel-body">
-        <p>Proposed behavior for live review. Nothing is saved.</p>
+        <p>
+          Minimal, refined styling with balanced spacing. All three layouts and interaction
+          proposals remain open for review. Nothing is saved.
+        </p>
+        <p>
+          The application owns the Material theme, navigation, top-bar content, and routed sample
+          page. Members and metrics are fictional preview data.
+        </p>
         <label
           >Navigation source<select
             #navSource
@@ -47,7 +60,7 @@
         >
         <label
           >Page body<select #pageBody [value]="contentMode()" (change)="setContent(pageBody.value)">
-            <option value="route">Routed content &amp; sample users</option>
+            <option value="route">Routed sample page</option>
             <option value="long">Long content (35 rows)</option>
             <option value="empty">Empty content</option>
           </select></label
@@ -66,7 +79,11 @@
           <dt>Route</dt>
           <dd>{{ shell.pageRoute() }}</dd>
           <dt>Dimensions</dt>
-          <dd>280 / 72 / 64 / 24px</dd>
+          <dd>256px sidebar / 64px rail / 56px top bar</dd>
+          <dt>Page padding</dt>
+          <dd>{{ shell.isMobile() ? '16px mobile' : '24px desktop' }}</dd>
+          <dt>Navigation</dt>
+          <dd>40px rows / 20px icons / 14px text / 8px corners</dd>
           <dt>Mobile breakpoint</dt>
           <dd>Below 960px</dd>
         </dl>
@@ -87,6 +104,14 @@
             Return to desktop: preserve the collapsed preference and discard the mobile-open state.
           </li>
           <li>Compare long content, empty content, a custom slot, and an empty array.</li>
+          <li>
+            Expand Workspace tools to inspect the wrapped label. Overview uses a registered SVG
+            icon; Manage and Users use font icons. Billing has no supplied icon.
+          </li>
+          <li>
+            Scroll page content and navigation independently. A and B keep the top bar visible; C
+            lets it scroll with the page.
+          </li>
         </ol>
       </div>
     </details>
